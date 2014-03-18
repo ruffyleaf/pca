@@ -1,0 +1,50 @@
+Principal Component Analysis of uscrime.csv
+========================================================
+
+Data Exploration and Data Preparation
+-----
+```{r}
+#Read in the data into a dataframe
+uscrime <- read.csv("uscrime.csv")
+
+#Display the first few entries
+head(uscrime)
+
+#Display the structure of the data
+str(uscrime)
+
+#Summary of the data
+summary(uscrime)
+
+#Check for missing values
+sum(complete.cases(uscrime))
+
+#Keep the complete cases only
+uscrime <- uscrime[complete.cases(uscrime),]
+
+```
+
+Preparing for factorization
+---------
+1. We prepare the variables for factorization
+2. Analyse the factorability using Correlation, significance and also the sampling adequacy
+
+```{r}
+# We want to factorize only the variables that make some sense
+uscrimepc <- uscrime[,c(4:10)]
+
+library(Hmisc)
+
+#Analyse the Variables Correlation and Significance
+rcorr(as.matrix(uscrimepc))
+
+#Check the Kaiser-Meyer-Olkin factor adequacy
+#Values above 0.5 are considered adequate.
+library(psych)
+KMO(uscrimepc)
+
+#Using Bartlett's test to check if the Correlation Matrix is an Identity matrix.
+#If the p-value is low, then we can reject the null hypothesis that the Correlation Matrix is an Identity matrix.
+cortest.bartlett(uscrimepc)
+```
+
