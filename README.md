@@ -1,4 +1,6 @@
-pca
-===
+Principal Component Analysis
+==============================
 
-Principal Component Analysis in R
+Principal Component Analysis in R.
+
+
