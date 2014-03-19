@@ -48,3 +48,26 @@ KMO(uscrimepc)
 cortest.bartlett(uscrimepc)
 ```
 
+Principal Component Analysis without rotation
+-----------------
+```{r}
+#Note that with the nfactor, we use all variables first and slowly cut down the variables for use.
+p1 <- principal(uscrimepc, nfactor=7, rotate="NULL")
+#Check the loadings
+p1$loadings
+
+scree(uscrimepc, factors=F)
+
+p2 <- principal(uscrimepc, nfactor = 2, rotate="NULL")
+#Check the loadings
+p2$loadings
+
+#Let's try rotation. default is VARIMAX rotation
+p2r <- principal(uscrimepc, nfactor=2)
+#Check the loadings
+p2r$loadings
+
+#Try another rotation - Oblimin
+p2ro <- principal(uscrimepc, nfactor=2, rotate="oblimin")
+print(p2ro$loadings, digits=3, cutoff=0.4, sort=T)
+```
