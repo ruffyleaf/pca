@@ -5,17 +5,17 @@ Principal Component Analysis in R.
 
 uscrime.csv consists of the following variables:
 ------
-state - State Abbreviation
-land - Land area
-popu - 1985 Population
-murd - Murder
-rape - Rape
-robb - Robbery
-assa - Assault
-burg - Burglary
-larc - Larceny
-auto - Auto theft
-reg - US States Region number
+1. state - State Abbreviation
+2. land - Land area
+3. popu - 1985 Population
+4. murd - Murder
+5. rape - Rape
+6. robb - Robbery
+7. assa - Assault
+8. burg - Burglary
+9. larc - Larceny
+10. auto - Auto theft
+11. reg - US States Region number
       1 - Northeast
       2 - Midwest
       3 - South
