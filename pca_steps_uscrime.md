@@ -206,6 +206,8 @@ cortest.bartlett(uscrimepc)
 
 Principal Component Analysis without rotation
 -----------------
+A note on Rotation: VARIMAX rotation is used if you expected PCs are highly uncorrelated. Oblimin rotation is used if the expected PCs are correlated.
+
 
 ```r
 # Note that with the nfactor, we use all variables first and slowly cut down
@@ -234,16 +236,17 @@ p1$loadings
 ```
 
 ```r
-
 scree(uscrimepc, factors = F)
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
-```r
 
+Factoring with 2 and 5 factors with No rotation
+--------------
+
+```r
 p2 <- principal(uscrimepc, nfactor = 2, rotate = "NULL")
-# Check the loadings
 p2$loadings
 ```
 
@@ -267,6 +270,33 @@ p2$loadings
 
 ```r
 
+p5r <- principal(uscrimepc, nfactor = 5, rotate = "NULL")
+p5r$loadings
+```
+
+```
+## 
+## Loadings:
+##      PC1    PC2    PC3    PC4    PC5   
+## murd  0.557  0.771         0.192  0.101
+## rape  0.851  0.139 -0.286 -0.173 -0.378
+## robb  0.782         0.480 -0.376       
+## assa  0.784  0.546                     
+## burg  0.881 -0.308 -0.123         0.145
+## larc  0.728 -0.480 -0.404         0.179
+## auto  0.714 -0.438  0.375  0.350 -0.168
+## 
+##                  PC1   PC2   PC3   PC4   PC5
+## SS loadings    4.077 1.432 0.631 0.340 0.248
+## Proportion Var 0.582 0.205 0.090 0.049 0.035
+## Cumulative Var 0.582 0.787 0.877 0.926 0.961
+```
+
+
+Factoring with 2 and 5 factors with VARIMAX rotation
+-----------------
+
+```r
 # Let's try rotation. default is VARIMAX rotation
 p2r <- principal(uscrimepc, nfactor = 2)
 ```
@@ -277,20 +307,20 @@ p2r <- principal(uscrimepc, nfactor = 2)
 
 ```r
 # Check the loadings
-p2r$loadings
+print(p2r$loadings, digits = 3, cutoff = 0.4, sort = T)
 ```
 
 ```
 ## 
 ## Loadings:
 ##      RC1    RC2   
-## murd         0.951
-## rape  0.599  0.620
 ## robb  0.660  0.424
-## assa  0.302  0.906
-## burg  0.890  0.280
+## burg  0.890       
 ## larc  0.870       
 ## auto  0.835       
+## murd         0.951
+## rape  0.599  0.620
+## assa         0.906
 ## 
 ##                  RC1   RC2
 ## SS loadings    3.131 2.377
@@ -300,6 +330,34 @@ p2r$loadings
 
 ```r
 
+# Rotation with 5 factors
+p5r <- principal(uscrimepc, nfactor = 5)
+print(p5r$loadings, digits = 3, cutoff = 0.4, sort = T)
+```
+
+```
+## 
+## Loadings:
+##      RC2   RC1   RC4   RC3   RC5  
+## murd 0.967                        
+## assa 0.852                        
+## burg       0.771                  
+## larc       0.930                  
+## auto             0.888            
+## robb                   0.872      
+## rape 0.427 0.420             0.757
+## 
+##                  RC2   RC1   RC4   RC3   RC5
+## SS loadings    1.973 1.859 1.105 1.047 0.745
+## Proportion Var 0.282 0.266 0.158 0.150 0.106
+## Cumulative Var 0.282 0.547 0.705 0.855 0.961
+```
+
+
+Factoring with 2 and 5 factors with Oblimin rotation
+-----------------
+
+```r
 # Try another rotation - Oblimin
 p2ro <- principal(uscrimepc, nfactor = 2, rotate = "oblimin")
 print(p2ro$loadings, digits = 3, cutoff = 0.4, sort = T)
@@ -322,4 +380,70 @@ print(p2ro$loadings, digits = 3, cutoff = 0.4, sort = T)
 ## Proportion Var 0.446 0.306
 ## Cumulative Var 0.446 0.753
 ```
+
+```r
+
+# With 5 factors
+p5ro <- principal(uscrimepc, nfactor = 5, rotate = "oblimin")
+p5ro$loadings
+```
+
+```
+## 
+## Loadings:
+##      TC2    TC1    TC3    TC4    TC5   
+## murd  1.016                            
+## rape                              0.988
+## robb                0.998              
+## assa  0.771         0.161         0.124
+## burg  0.176  0.722         0.220       
+## larc         0.999                     
+## auto                       0.983       
+## 
+##                  TC2   TC1   TC3   TC4   TC5
+## SS loadings    1.662 1.527 1.034 1.019 0.995
+## Proportion Var 0.237 0.218 0.148 0.146 0.142
+## Cumulative Var 0.237 0.456 0.603 0.749 0.891
+```
+
+
+View the Scores on the principal components
+----------
+
+```r
+head(p2ro$scores)
+```
+
+```
+##        TC1     TC2
+## 1 -1.22094 -1.2144
+## 2 -1.27366 -1.3294
+## 3 -1.09515 -1.1666
+## 4  0.72663 -0.9873
+## 5  0.68871 -1.2005
+## 6  0.09274 -0.9602
+```
+
+```r
+
+# Align component scores to the original data and create a new dataframe
+uscrime2f <- cbind(uscrime, p2ro$scores)
+
+# Plot the results with color
+plot(uscrime2f$TC1, uscrime2f$TC2, xlab = "Component 1", ylab = "Component 2", 
+    pch = 18, col = c("blue", "red", "green", "yellow")[uscrime2f$reg])
+# add in the State to the plot
+text(uscrime2f$TC1, uscrime2f$TC2, uscrime2f$state, cex = 0.6, pos = 4, col = "black")
+```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-71.png) 
+
+```r
+
+# View the biplot of 2 principal components and using Oblimin rotation as
+# the results are correlated in some way.
+biplot(p2ro)
+```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-72.png) 
 
