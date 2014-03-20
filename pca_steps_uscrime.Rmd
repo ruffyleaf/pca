@@ -84,6 +84,7 @@ print(p5r$loadings, digits=3, cutoff=0.4, sort=T)
 ```
 
 Factoring with 2 and 5 factors with Oblimin rotation
+-----------------
 ```{r}
 #Try another rotation - Oblimin
 p2ro <- principal(uscrimepc, nfactor=2, rotate="oblimin")
@@ -102,8 +103,11 @@ head(p2ro$scores)
 #Align component scores to the original data and create a new dataframe
 uscrime2f <- cbind(uscrime, p2ro$scores)
 
-#Plot the results
+#Plot the results with color
 plot(uscrime2f$TC1, uscrime2f$TC2, xlab="Component 1", ylab="Component 2", pch=18, col=c("blue", "red", "green", "yellow")[uscrime2f$reg])
+#add in the State to the plot
 text(uscrime2f$TC1, uscrime2f$TC2, uscrime2f$state, cex=0.6, pos=4, col="black")
+
+#View the biplot of 2 principal components and using Oblimin rotation as the results are correlated in some way.
 biplot(p2ro)
 ```
